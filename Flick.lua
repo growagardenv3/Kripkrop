@@ -61,15 +61,14 @@ runButton.Text = "RUN SCRIPT"
 runButton.Visible = false
 Instance.new("UICorner", runButton).CornerRadius = UDim.new(0, 6)
 
--- Loading animation
+-- Loading animation (80 seconds total)
 spawn(function()
 	for i = 1, 100 do
 		progressBar.Size = UDim2.new(i / 100, 0, 1, 0)
 		percentageLabel.Text = i .. "%"
-		wait(0.01)
+		wait(0.8) -- 100 steps × 0.8s = 80 seconds
 	end
 
-	-- Replace loading bar with button
 	progressBar.Visible = false
 	runButton.Visible = true
 end)
@@ -88,7 +87,7 @@ runButton.MouseButton1Click:Connect(function()
 		Theme = "Default",
 		DisableRayfieldPrompts = false,
 		DisableBuildWarnings = false,
-		ConfigurationSaving = { Enabled = false, FolderName = nil, FileName = "" },
+		ConfigurationSaving = { Enabled = false },
 		Discord = { Enabled = false, Invite = "noinvitelink", RememberJoins = true },
 		KeySystem = false,
 		KeySettings = {
@@ -103,7 +102,6 @@ runButton.MouseButton1Click:Connect(function()
 	})
 
 	local Tab = Window:CreateTab("Main", 4483362458)
-
 	local multiplier = 2
 
 	local function dupeEquippedTool()
