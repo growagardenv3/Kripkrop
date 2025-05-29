@@ -1,6 +1,7 @@
 -- Create Loading GUI
 local gui = Instance.new("ScreenGui")
 gui.Name = "LoadingScriptGUI"
+gui.ResetOnSpawn = false
 pcall(function()
 	gui.Parent = game:GetService("CoreGui")
 end)
@@ -8,17 +9,18 @@ if not gui.Parent then
 	gui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 end
 
--- Frame
+-- Main Frame
 local frame = Instance.new("Frame", gui)
-frame.Size = UDim2.new(0, 405, 0, 160) -- Expanded size
-frame.Position = UDim2.new(0.5, -202, 0.5, -80)
+frame.Size = UDim2.new(0, 430, 0, 180)
+frame.Position = UDim2.new(0.5, -210, 0.5, -85)
 frame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+frame.BackgroundTransparency = 0
 Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 12)
 
 -- Title
 local title = Instance.new("TextLabel", frame)
 title.Text = "Loading script!"
-title.Size = UDim2.new(1, 0, 0, 50)
+title.Size = UDim2.new(1, 0, 0, 40)
 title.Position = UDim2.new(0, 0, 0, 10)
 title.BackgroundTransparency = 1
 title.TextColor3 = Color3.fromRGB(0, 255, 170)
@@ -29,26 +31,26 @@ title.TextScaled = true
 local subtitle = Instance.new("TextLabel", frame)
 subtitle.Text = "Bypassing anti-cheat, please wait..."
 subtitle.Size = UDim2.new(1, 0, 0, 20)
-subtitle.Position = UDim2.new(0, 0, 0, 55)
+subtitle.Position = UDim2.new(0, 0, 0, 50)
 subtitle.BackgroundTransparency = 1
 subtitle.TextColor3 = Color3.fromRGB(0, 255, 170)
 subtitle.Font = Enum.Font.Gotham
 subtitle.TextScaled = true
 
--- Progress bar container
+-- Progress Bar Background
 local progressBarBG = Instance.new("Frame", frame)
 progressBarBG.Size = UDim2.new(0.8, 0, 0.15, 0)
 progressBarBG.Position = UDim2.new(0.1, 0, 0.7, 0)
 progressBarBG.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 Instance.new("UICorner", progressBarBG).CornerRadius = UDim.new(0, 6)
 
--- Progress bar
+-- Progress Bar Fill
 local progressBar = Instance.new("Frame", progressBarBG)
 progressBar.Size = UDim2.new(0, 0, 1, 0)
 progressBar.BackgroundColor3 = Color3.fromRGB(0, 255, 170)
 Instance.new("UICorner", progressBar).CornerRadius = UDim.new(0, 6)
 
--- Percentage label
+-- Percentage Label
 local percentageLabel = Instance.new("TextLabel", frame)
 percentageLabel.Position = UDim2.new(0.5, 0, 0.55, 0)
 percentageLabel.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -71,28 +73,27 @@ runButton.Text = "RUN SCRIPT"
 runButton.Visible = false
 Instance.new("UICorner", runButton).CornerRadius = UDim.new(0, 6)
 
--- Loading animation
+-- Animate Loading
 spawn(function()
 	for i = 1, 100 do
 		progressBar.Size = UDim2.new(i / 100, 0, 1, 0)
 		percentageLabel.Text = i .. "%"
-		wait(0.8) -- 100 steps × 0.8s = 80 seconds
+		wait(0.05)
 	end
 	progressBar.Visible = false
 	runButton.Visible = true
 end)
 
--- On run, destroy GUI and load Rayfield GUI
+-- Button Click Logic
 runButton.MouseButton1Click:Connect(function()
 	gui:Destroy()
 
 	local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
-
 	local Window = Rayfield:CreateWindow({
 		Name = "Fruits And Pets Dupe",
 		Icon = 0,
 		LoadingTitle = "Dupe",
-		LoadingSubtitle = "by Flash",
+		LoadingSubtitle = "by Zeneveroux",
 		Theme = "Default",
 		DisableRayfieldPrompts = false,
 		DisableBuildWarnings = false,
@@ -112,27 +113,26 @@ runButton.MouseButton1Click:Connect(function()
 
 	local Tab = Window:CreateTab("Main", 4483362458)
 	local multiplier = 2
-	local petName = ""
 
-	-- Dupe Equipped Tool
-	Tab:CreateButton({
-		Name = "Dupe Equipped Item",
-		Callback = function()
-			local player = game.Players.LocalPlayer
-			local character = player.Character
-			if character then
-				local tool = character:FindFirstChildOfClass("Tool")
-				if tool and not tostring(tool):match("Seed") then
-					for i = 1, multiplier do
-						local clone = tool:Clone()
-						clone.Parent = player.Backpack
-					end
+	local function dupeEquippedTool()
+		local player = game.Players.LocalPlayer
+		local character = player.Character
+		if character then
+			local equippedTool = character:FindFirstChildOfClass("Tool")
+			if equippedTool and not tostring(equippedTool):match("Seed") then
+				for i = 1, multiplier do
+					local clone = equippedTool:Clone()
+					clone.Parent = player.Backpack
 				end
 			end
 		end
+	end
+
+	Tab:CreateButton({
+		Name = "Dupe Equipped Item",
+		Callback = dupeEquippedTool
 	})
 
-	-- Multiplier Slider
 	Tab:CreateSlider({
 		Name = "Multiplier",
 		Range = {2, 100},
@@ -145,7 +145,6 @@ runButton.MouseButton1Click:Connect(function()
 		end
 	})
 
-	-- Dupe Seeds
 	Tab:CreateButton({
 		Name = "Dupe Seeds",
 		Callback = function()
@@ -161,38 +160,42 @@ runButton.MouseButton1Click:Connect(function()
 		end
 	})
 
-	-- Pet Spawner Section
-	Tab:CreateInput({
-		Name = "Pet you want to spawn",
-		PlaceholderText = "", -- Blank as requested
+	local PetTab = Window:CreateTab("Pet Spawner", 4483362458)
+
+	PetTab:CreateInput({
+		Name = "",
+		PlaceholderText = "",
 		RemoveTextAfterFocusLost = false,
-		Callback = function(text)
-			petName = text
+		Callback = function(input)
+			-- handle pet name
 		end
 	})
 
-	Tab:CreateButton({
+	PetTab:CreateSlider({
+		Name = "Multiplier",
+		Range = {2, 100},
+		Increment = 1,
+		CurrentValue = multiplier,
+		Flag = "petMultiplier",
+		Callback = function(value)
+			multiplier = value
+		end
+	})
+
+	PetTab:CreateButton({
 		Name = "Dupe Pet",
 		Callback = function()
 			local player = game.Players.LocalPlayer
-			local backpack = player:WaitForChild("Backpack")
-			local function findPet(name)
+			local backpack = player:FindFirstChild("Backpack")
+			if backpack then
 				for _, item in pairs(backpack:GetChildren()) do
-					if item:IsA("Tool") and item.Name == name then
-						return item
+					if item:IsA("Tool") and not item.Name:match("Seed") then
+						for i = 1, multiplier do
+							local clone = item:Clone()
+							clone.Parent = backpack
+						end
 					end
 				end
-				return nil
-			end
-
-			local pet = findPet(petName)
-			if pet then
-				for i = 1, multiplier do
-					local clone = pet:Clone()
-					clone.Parent = backpack
-				end
-			else
-				warn("Pet not found in Backpack: " .. petName)
 			end
 		end
 	})
