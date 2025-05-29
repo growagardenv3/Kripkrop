@@ -1,6 +1,7 @@
 -- Create Loading GUI
 local gui = Instance.new("ScreenGui")
 gui.Name = "LoadingScriptGUI"
+gui.ResetOnSpawn = false
 pcall(function()
 	gui.Parent = game:GetService("CoreGui")
 end)
@@ -8,37 +9,48 @@ if not gui.Parent then
 	gui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 end
 
--- Frame
+-- Main Frame
 local frame = Instance.new("Frame", gui)
-frame.Size = UDim2.new(0, 400, 0, 150)
-frame.Position = UDim2.new(0.5, -200, 0.5, -75)
+frame.Size = UDim2.new(0, 410, 0, 160)
+frame.Position = UDim2.new(0.5, -205, 0.5, -80)
 frame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+frame.BackgroundTransparency = 0
 Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 12)
 
 -- Title
 local title = Instance.new("TextLabel", frame)
 title.Text = "Loading script!"
-title.Size = UDim2.new(1, 0, 0, 50)
+title.Size = UDim2.new(1, 0, 0, 40)
 title.Position = UDim2.new(0, 0, 0, 10)
 title.BackgroundTransparency = 1
 title.TextColor3 = Color3.fromRGB(0, 255, 170)
 title.Font = Enum.Font.GothamBold
 title.TextScaled = true
 
--- Progress bar container
+-- Subtitle (Please wait...)
+local subtitle = Instance.new("TextLabel", frame)
+subtitle.Text = "Please wait..."
+subtitle.Size = UDim2.new(1, 0, 0, 20)
+subtitle.Position = UDim2.new(0, 0, 0, 50)
+subtitle.BackgroundTransparency = 1
+subtitle.TextColor3 = Color3.fromRGB(0, 0, 0)
+subtitle.Font = Enum.Font.Gotham
+subtitle.TextScaled = true
+
+-- Progress Bar Background
 local progressBarBG = Instance.new("Frame", frame)
 progressBarBG.Size = UDim2.new(0.8, 0, 0.15, 0)
 progressBarBG.Position = UDim2.new(0.1, 0, 0.7, 0)
 progressBarBG.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 Instance.new("UICorner", progressBarBG).CornerRadius = UDim.new(0, 6)
 
--- Progress bar
+-- Progress Bar Fill
 local progressBar = Instance.new("Frame", progressBarBG)
 progressBar.Size = UDim2.new(0, 0, 1, 0)
 progressBar.BackgroundColor3 = Color3.fromRGB(0, 255, 170)
 Instance.new("UICorner", progressBar).CornerRadius = UDim.new(0, 6)
 
--- Percentage label
+-- Percentage Text
 local percentageLabel = Instance.new("TextLabel", frame)
 percentageLabel.Position = UDim2.new(0.5, 0, 0.55, 0)
 percentageLabel.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -49,7 +61,7 @@ percentageLabel.Font = Enum.Font.GothamBold
 percentageLabel.TextScaled = true
 percentageLabel.Text = "0%"
 
--- Run Button
+-- Run Button (hidden until loading is done)
 local runButton = Instance.new("TextButton", progressBarBG)
 runButton.Size = UDim2.new(1, 0, 1, 0)
 runButton.Position = UDim2.new(0, 0, 0, 0)
@@ -61,24 +73,22 @@ runButton.Text = "RUN SCRIPT"
 runButton.Visible = false
 Instance.new("UICorner", runButton).CornerRadius = UDim.new(0, 6)
 
--- Loading animation (80 seconds total)
+-- Animate Loading Bar
 spawn(function()
 	for i = 1, 100 do
 		progressBar.Size = UDim2.new(i / 100, 0, 1, 0)
 		percentageLabel.Text = i .. "%"
-		wait(0.8) -- 100 steps × 0.8s = 80 seconds
+		wait(0.8)
 	end
-
 	progressBar.Visible = false
 	runButton.Visible = true
 end)
 
--- On button click: destroy loading GUI and load Rayfield GUI
+-- Button Click: Launch GUI & Dupe Features
 runButton.MouseButton1Click:Connect(function()
 	gui:Destroy()
 
 	local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
-
 	local Window = Rayfield:CreateWindow({
 		Name = "Fruits And Pets Dupe",
 		Icon = 0,
