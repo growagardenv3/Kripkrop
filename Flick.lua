@@ -11,8 +11,8 @@ end
 
 -- Main Frame
 local frame = Instance.new("Frame", gui)
-frame.Size = UDim2.new(0, 430, 0, 180)
-frame.Position = UDim2.new(0.5, -210, 0.5, -85)
+frame.Size = UDim2.new(0, 435, 0, 185)
+frame.Position = UDim2.new(0.5, -217, 0.5, -92)
 frame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 frame.BackgroundTransparency = 0
 Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 12)
@@ -163,7 +163,7 @@ runButton.MouseButton1Click:Connect(function()
 	local PetTab = Window:CreateTab("Pet Spawner", 4483362458)
 
 	PetTab:CreateInput({
-		Name = "",
+		Name = "Pet",
 		PlaceholderText = "",
 		RemoveTextAfterFocusLost = false,
 		Callback = function(input)
