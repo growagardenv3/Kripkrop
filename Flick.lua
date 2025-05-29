@@ -92,7 +92,7 @@ runButton.MouseButton1Click:Connect(function()
 		Name = "Fruits And Pets Dupe",
 		Icon = 0,
 		LoadingTitle = "Dupe",
-		LoadingSubtitle = "by Zeneveroux",
+		LoadingSubtitle = "by Flash",
 		Theme = "Default",
 		DisableRayfieldPrompts = false,
 		DisableBuildWarnings = false,
