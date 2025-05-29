@@ -9,12 +9,11 @@ if not gui.Parent then
 	gui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 end
 
--- Main Frame
+-- Main Frame (expanded by 15px)
 local frame = Instance.new("Frame", gui)
-frame.Size = UDim2.new(0, 435, 0, 185)
-frame.Position = UDim2.new(0.5, -217, 0.5, -92)
+frame.Size = UDim2.new(0, 445, 0, 195)
+frame.Position = UDim2.new(0.5, -222, 0.5, -97)
 frame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-frame.BackgroundTransparency = 0
 Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 12)
 
 -- Title
@@ -73,84 +72,71 @@ runButton.Text = "RUN SCRIPT"
 runButton.Visible = false
 Instance.new("UICorner", runButton).CornerRadius = UDim.new(0, 6)
 
--- Animate Loading
+-- Animate Loading (70 seconds)
 spawn(function()
 	for i = 1, 100 do
 		progressBar.Size = UDim2.new(i / 100, 0, 1, 0)
 		percentageLabel.Text = i .. "%"
-		wait(0.05)
+		wait(0.7)
 	end
 	progressBar.Visible = false
 	runButton.Visible = true
 end)
 
--- Button Click Logic
+-- Run Rayfield GUI
 runButton.MouseButton1Click:Connect(function()
 	gui:Destroy()
 
 	local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 	local Window = Rayfield:CreateWindow({
 		Name = "Fruits And Pets Dupe",
-		Icon = 0,
 		LoadingTitle = "Dupe",
 		LoadingSubtitle = "by Zeneveroux",
 		Theme = "Default",
-		DisableRayfieldPrompts = false,
-		DisableBuildWarnings = false,
 		ConfigurationSaving = { Enabled = false },
-		Discord = { Enabled = false, Invite = "noinvitelink", RememberJoins = true },
 		KeySystem = false,
-		KeySettings = {
-			Title = "Untitled",
-			Subtitle = "Key System",
-			Note = "No method of obtaining the key is provided",
-			FileName = "Key",
-			SaveKey = true,
-			GrabKeyFromSite = false,
-			Key = { "" }
-		}
 	})
 
-	local Tab = Window:CreateTab("Main", 4483362458)
+	local MainTab = Window:CreateTab("Main", 4483362458)
+	local PetTab = Window:CreateTab("Pet Spawner", 4483362458)
+
 	local multiplier = 2
 
-	local function dupeEquippedTool()
-		local player = game.Players.LocalPlayer
-		local character = player.Character
-		if character then
-			local equippedTool = character:FindFirstChildOfClass("Tool")
-			if equippedTool and not tostring(equippedTool):match("Seed") then
-				for i = 1, multiplier do
-					local clone = equippedTool:Clone()
-					clone.Parent = player.Backpack
+	-- Main Dupe Button
+	MainTab:CreateButton({
+		Name = "Dupe Equipped Item",
+		Callback = function()
+			local player = game.Players.LocalPlayer
+			local char = player.Character
+			if char then
+				local tool = char:FindFirstChildOfClass("Tool")
+				if tool and not tool.Name:match("Seed") then
+					for i = 1, multiplier do
+						local clone = tool:Clone()
+						clone.Parent = player.Backpack
+					end
 				end
 			end
 		end
-	end
-
-	Tab:CreateButton({
-		Name = "Dupe Equipped Item",
-		Callback = dupeEquippedTool
 	})
 
-	Tab:CreateSlider({
+	MainTab:CreateSlider({
 		Name = "Multiplier",
 		Range = {2, 100},
 		Increment = 1,
-		Suffix = "",
 		CurrentValue = multiplier,
-		Flag = "a",
-		Callback = function(value)
-			multiplier = value
+		Flag = "MainMult",
+		Callback = function(val)
+			multiplier = val
 		end
 	})
 
-	Tab:CreateButton({
+	MainTab:CreateButton({
 		Name = "Dupe Seeds",
 		Callback = function()
 			local player = game.Players.LocalPlayer
 			for _, item in pairs(player.Backpack:GetChildren()) do
-				if tostring(item):match("[X%d+]") and tostring(item):match("Seed") then
+				if item.Name:match("[X%d+]") and item.Name:match("Seed") then
 					local count = tonumber(item.Name:match("(%d+)"))
 					if count then
 						item.Name = item.Name:gsub("(%d+)", tostring(count * multiplier))
@@ -160,14 +146,13 @@ runButton.MouseButton1Click:Connect(function()
 		end
 	})
 
-	local PetTab = Window:CreateTab("Pet Spawner", 4483362458)
-
+	-- Pet GUI
 	PetTab:CreateInput({
 		Name = "Pet",
 		PlaceholderText = "",
 		RemoveTextAfterFocusLost = false,
-		Callback = function(input)
-			-- handle pet name
+		Callback = function(pet)
+			-- Placeholder logic
 		end
 	})
 
@@ -176,27 +161,16 @@ runButton.MouseButton1Click:Connect(function()
 		Range = {2, 100},
 		Increment = 1,
 		CurrentValue = multiplier,
-		Flag = "petMultiplier",
-		Callback = function(value)
-			multiplier = value
+		Flag = "PetMult",
+		Callback = function(val)
+			multiplier = val
 		end
 	})
 
 	PetTab:CreateButton({
 		Name = "Dupe Pet",
 		Callback = function()
-			local player = game.Players.LocalPlayer
-			local backpack = player:FindFirstChild("Backpack")
-			if backpack then
-				for _, item in pairs(backpack:GetChildren()) do
-					if item:IsA("Tool") and not item.Name:match("Seed") then
-						for i = 1, multiplier do
-							local clone = item:Clone()
-							clone.Parent = backpack
-						end
-					end
-				end
-			end
+			-- Pet dupe logic placeholder
 		end
 	})
 end)
