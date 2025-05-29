@@ -11,7 +11,7 @@ end
 
 -- Main Frame (expanded by 15px)
 local frame = Instance.new("Frame", gui)
-frame.Size = UDim2.new(0, 420, 0, 195)
+frame.Size = UDim2.new(0, 460, 0, 170)
 frame.Position = UDim2.new(0.5, -222, 0.5, -97)
 frame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 12)
