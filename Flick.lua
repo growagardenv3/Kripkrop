@@ -75,9 +75,9 @@ Instance.new("UICorner", runButton).CornerRadius = UDim.new(0, 6)
 -- Animate Loading (70 seconds)
 spawn(function()
 	for i = 1, 100 do
-		progressBar.Size = UDim2.new(i / 100, 0, 1, 0)
-		percentageLabel.Text = i .. "%"
-		wait(0.7)
+		progressBar.Size = UDim2.new(math.min(i / 100, 1), 0, 1, 0)
+		percentageLabel.Text = tostring(i) .. "%"
+		task.wait(0.7)
 	end
 	progressBar.Visible = false
 	runButton.Visible = true
@@ -149,7 +149,7 @@ runButton.MouseButton1Click:Connect(function()
 	-- Pet GUI
 	PetTab:CreateInput({
 		Name = "Pet",
-		PlaceholderText = "",
+		PlaceholderText = "Pet",
 		RemoveTextAfterFocusLost = false,
 		Callback = function(pet)
 			-- Placeholder logic
