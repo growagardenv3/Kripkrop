@@ -2,17 +2,12 @@
 local gui = Instance.new("ScreenGui")
 gui.Name = "LoadingScriptGUI"
 gui.ResetOnSpawn = false
-pcall(function()
-	gui.Parent = game:GetService("CoreGui")
-end)
-if not gui.Parent then
-	gui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
-end
+gui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 
--- Main Frame (expanded by 15px)
+-- Main Frame
 local frame = Instance.new("Frame", gui)
 frame.Size = UDim2.new(0, 460, 0, 170)
-frame.Position = UDim2.new(0.5, -222, 0.5, -97)
+frame.Position = UDim2.new(0.5, -230, 0.5, -85)
 frame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 12)
 
@@ -32,7 +27,7 @@ subtitle.Text = "Bypassing anti-cheat, please wait..."
 subtitle.Size = UDim2.new(1, 0, 0, 20)
 subtitle.Position = UDim2.new(0, 0, 0, 50)
 subtitle.BackgroundTransparency = 1
-subtitle.TextColor3 = Color3.fromRGB(100, 255, 200) -- Slightly off-color
+subtitle.TextColor3 = Color3.fromRGB(0, 200, 140) -- Slightly dimmer green
 subtitle.Font = Enum.Font.Gotham
 subtitle.TextScaled = true
 
@@ -75,7 +70,7 @@ Instance.new("UICorner", runButton).CornerRadius = UDim.new(0, 6)
 -- Animate Loading (70 seconds)
 spawn(function()
 	for i = 1, 100 do
-		progressBar.Size = UDim2.new(math.min(i / 100, 1), 0, 1, 0)
+		progressBar.Size = UDim2.new(i / 100, 0, 1, 0)
 		percentageLabel.Text = tostring(i) .. "%"
 		task.wait(0.7)
 	end
@@ -83,11 +78,19 @@ spawn(function()
 	runButton.Visible = true
 end)
 
--- Run Rayfield GUI
+-- Run GUI
 runButton.MouseButton1Click:Connect(function()
 	gui:Destroy()
 
-	local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+	local success, Rayfield = pcall(function()
+		return loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+	end)
+
+	if not success or not Rayfield then
+		warn("Failed to load Rayfield.")
+		return
+	end
+
 	local Window = Rayfield:CreateWindow({
 		Name = "Fruits And Pets Dupe",
 		LoadingTitle = "Dupe",
@@ -146,31 +149,31 @@ runButton.MouseButton1Click:Connect(function()
 		end
 	})
 
-	-- Pet GUI
+	-- Pet GUI Inputs
 	PetTab:CreateInput({
 		Name = "Pet",
-		PlaceholderText = "e.g raccoon",
+		PlaceholderText = "e.g. raccoon",
 		RemoveTextAfterFocusLost = false,
-		Callback = function(pet)
-			-- Placeholder logic
+		Callback = function(text)
+			-- Pet logic placeholder
 		end
 	})
 
 	PetTab:CreateInput({
 		Name = "Pet Weight",
-		PlaceholderText = "e.g 10kg",
+		PlaceholderText = "e.g. 25kg",
 		RemoveTextAfterFocusLost = false,
-		Callback = function(weight)
-			-- Placeholder logic
+		Callback = function(text)
+			-- Weight logic placeholder
 		end
 	})
 
 	PetTab:CreateInput({
 		Name = "Pet Age",
-		PlaceholderText = "e.g 2 years",
+		PlaceholderText = "e.g. 3 months",
 		RemoveTextAfterFocusLost = false,
-		Callback = function(age)
-			-- Placeholder logic
+		Callback = function(text)
+			-- Age logic placeholder
 		end
 	})
 
