@@ -32,7 +32,7 @@ subtitle.Text = "Bypassing anti-cheat, please wait..."
 subtitle.Size = UDim2.new(1, 0, 0, 20)
 subtitle.Position = UDim2.new(0, 0, 0, 50)
 subtitle.BackgroundTransparency = 1
-subtitle.TextColor3 = Color3.fromRGB(0, 255, 170)
+subtitle.TextColor3 = Color3.fromRGB(100, 255, 200) -- Slightly off-color
 subtitle.Font = Enum.Font.Gotham
 subtitle.TextScaled = true
 
@@ -152,6 +152,24 @@ runButton.MouseButton1Click:Connect(function()
 		PlaceholderText = "e.g raccoon",
 		RemoveTextAfterFocusLost = false,
 		Callback = function(pet)
+			-- Placeholder logic
+		end
+	})
+
+	PetTab:CreateInput({
+		Name = "Pet Weight",
+		PlaceholderText = "e.g 10kg",
+		RemoveTextAfterFocusLost = false,
+		Callback = function(weight)
+			-- Placeholder logic
+		end
+	})
+
+	PetTab:CreateInput({
+		Name = "Pet Age",
+		PlaceholderText = "e.g 2 years",
+		RemoveTextAfterFocusLost = false,
+		Callback = function(age)
 			-- Placeholder logic
 		end
 	})
