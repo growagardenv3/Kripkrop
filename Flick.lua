@@ -2,17 +2,7 @@
 local gui = Instance.new("ScreenGui")
 gui.Name = "LoadingScriptGUI"
 gui.ResetOnSpawn = false
-
--- Parent to PlayerGui (avoid CoreGui for mobile compatibility)
-local success, player = pcall(function()
-	return game:GetService("Players").LocalPlayer
-end)
-if success and player then
-	gui.Parent = player:WaitForChild("PlayerGui")
-else
-	warn("Could not get LocalPlayer.")
-	return
-end
+gui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 
 -- Main Frame
 local frame = Instance.new("Frame", gui)
@@ -31,7 +21,7 @@ title.TextColor3 = Color3.fromRGB(0, 255, 170)
 title.Font = Enum.Font.GothamBold
 title.TextScaled = true
 
--- Subtitle (Dimmer)
+-- Subtitle (slightly dimmer to act as a description)
 local subtitle = Instance.new("TextLabel", frame)
 subtitle.Text = "Bypassing anti-cheat, please wait..."
 subtitle.Size = UDim2.new(1, 0, 0, 20)
@@ -41,7 +31,7 @@ subtitle.TextColor3 = Color3.fromRGB(0, 200, 140)
 subtitle.Font = Enum.Font.Gotham
 subtitle.TextScaled = true
 
--- Progress Bar BG
+-- Progress Bar Background
 local progressBarBG = Instance.new("Frame", frame)
 progressBarBG.Size = UDim2.new(0.8, 0, 0.15, 0)
 progressBarBG.Position = UDim2.new(0.1, 0, 0.7, 0)
@@ -77,18 +67,18 @@ runButton.Text = "RUN SCRIPT"
 runButton.Visible = false
 Instance.new("UICorner", runButton).CornerRadius = UDim.new(0, 6)
 
--- Animate Loading
+-- Animate Loading (70 seconds)
 task.spawn(function()
 	for i = 1, 100 do
 		progressBar.Size = UDim2.new(i / 100, 0, 1, 0)
 		percentageLabel.Text = tostring(i) .. "%"
-		task.wait(0.03)
+		task.wait(0.7) -- 100 steps * 0.7 = 70 seconds
 	end
 	progressBar.Visible = false
 	runButton.Visible = true
 end)
 
--- Run GUI
+-- Run Rayfield GUI
 runButton.MouseButton1Click:Connect(function()
 	gui:Destroy()
 
@@ -118,11 +108,15 @@ runButton.MouseButton1Click:Connect(function()
 	MainTab:CreateButton({
 		Name = "Dupe Equipped Item",
 		Callback = function()
-			local tool = player.Character and player.Character:FindFirstChildOfClass("Tool")
-			if tool and not tool.Name:match("Seed") then
-				for i = 1, multiplier do
-					local clone = tool:Clone()
-					clone.Parent = player.Backpack
+			local player = game.Players.LocalPlayer
+			local char = player.Character
+			if char then
+				local tool = char:FindFirstChildOfClass("Tool")
+				if tool and not tool.Name:match("Seed") then
+					for i = 1, multiplier do
+						local clone = tool:Clone()
+						clone.Parent = player.Backpack
+					end
 				end
 			end
 		end
@@ -142,6 +136,7 @@ runButton.MouseButton1Click:Connect(function()
 	MainTab:CreateButton({
 		Name = "Dupe Seeds",
 		Callback = function()
+			local player = game.Players.LocalPlayer
 			for _, item in pairs(player.Backpack:GetChildren()) do
 				if item.Name:match("[X%d+]") and item.Name:match("Seed") then
 					local count = tonumber(item.Name:match("(%d+)"))
@@ -157,8 +152,8 @@ runButton.MouseButton1Click:Connect(function()
 		Name = "Pet",
 		PlaceholderText = "e.g. raccoon",
 		RemoveTextAfterFocusLost = false,
-		Callback = function(petName)
-			-- pet name logic placeholder
+		Callback = function(text)
+			-- Pet logic placeholder
 		end
 	})
 
@@ -166,8 +161,8 @@ runButton.MouseButton1Click:Connect(function()
 		Name = "Pet Weight",
 		PlaceholderText = "e.g. 3.44kg",
 		RemoveTextAfterFocusLost = false,
-		Callback = function(petWeight)
-			-- pet weight logic placeholder
+		Callback = function(text)
+			-- Weight logic placeholder
 		end
 	})
 
@@ -175,8 +170,8 @@ runButton.MouseButton1Click:Connect(function()
 		Name = "Pet Age",
 		PlaceholderText = "e.g. 17",
 		RemoveTextAfterFocusLost = false,
-		Callback = function(petAge)
-			-- pet age logic placeholder
+		Callback = function(text)
+			-- Age logic placeholder
 		end
 	})
 
@@ -194,7 +189,7 @@ runButton.MouseButton1Click:Connect(function()
 	PetTab:CreateButton({
 		Name = "Dupe Pet",
 		Callback = function()
-			-- pet dupe logic placeholder
+			-- Pet dupe logic placeholder
 		end
 	})
 end)
